@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AppStreams {
 
@@ -22,32 +23,24 @@ public class AppStreams {
 
         // 2. Filter characters with mass > 80
         System.out.println("\n=== Characters with Mass > 80 ===");
-        ArrayList<Character> filtered = new ArrayList<Character>();
-        for (Character c : characters) {
-            if (c.getMass() > 80) {
-                filtered.add(c);
-                System.out.println(c.getName() + " (" + c.getMass() + ")");
-            }
-        }
+
+        List<Character> heavyCharacters = characters.stream()
+                .filter(character -> character.getMass() > 80)
+                        .toList();
+
+        heavyCharacters.forEach(character -> System.out.println(character.getName() + " - " + character.getMass() ));
+
 
         // 3. Create a list of just names
         System.out.println("\n=== Character Names ===");
-        ArrayList<String> names = new ArrayList<String>();
-        for (Character c : characters) {
-            names.add(c.getName());
-        }
-        for (String name : names) {
-            System.out.println(name);
-        }
+
+        characters.stream()
+                .map( character -> character.getName() )
+                .forEach(name -> System.out.println(name));
 
         // 4. Check if any character has blue eyes
-        boolean hasBlueEyes = false;
-        for (Character c : characters) {
-            if (c.getEyeColor().equalsIgnoreCase("blue")) {
-                hasBlueEyes = true;
-                break;
-            }
-        }
+        boolean hasBlueEyes = characters.stream()
+                .anyMatch( character -> character.getEyeColor().equalsIgnoreCase("blue"));
         if (hasBlueEyes) {
             System.out.println("\nSome characters have blue eyes");
         } else {
@@ -55,13 +48,9 @@ public class AppStreams {
         }
 
         // 5. Check if all characters are male
-        boolean allMale = true;
-        for (Character c : characters) {
-            if (!c.getGender().equalsIgnoreCase("male")) {
-                allMale = false;
-                break;
-            }
-        }
+        boolean allMale = characters.stream()
+                .allMatch(character -> character.getGender().equalsIgnoreCase("male"));
+
         if (allMale) {
             System.out.println("All the characters are male");
         } else {
@@ -69,10 +58,10 @@ public class AppStreams {
         }
 
         // 6. Calculate total mass
-        int totalMass = 0;
-        for (Character c : characters) {
-            totalMass += c.getMass();
-        }
+        int totalMass = characters.stream()
+                        .mapToInt(character -> character.getMass())
+                        .sum();
+
         System.out.println("Total mass: " + totalMass);
     }
 
